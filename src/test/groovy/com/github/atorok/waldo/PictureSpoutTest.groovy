@@ -1,5 +1,7 @@
 package com.github.atorok.waldo
 
+import com.github.atorok.waldo.api.PictureDrop
+import com.github.atorok.waldo.api.PictureSpout
 import spock.lang.Specification
 
 class PictureSpoutTest extends Specification {

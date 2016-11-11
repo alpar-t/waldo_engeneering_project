@@ -4,6 +4,7 @@ import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.GetObjectRequest;
 import com.amazonaws.services.s3.model.S3Object;
 import com.amazonaws.services.s3.model.S3ObjectSummary;
+import com.github.atorok.waldo.api.PictureDrop;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -37,8 +38,8 @@ public class AwsS3BackedDrop implements PictureDrop {
         rangeObjectRequest.setRange(0, METADATA_HEADER_SIZE);
 
         S3Object objectPortion = client.getObject(rangeObjectRequest);
-        logger.info("Request for s3://{}/{} took {} seconds {}",
-                summary.getBucketName(), summary.getKey(), (System.currentTimeMillis() - requestStart) / 1000.0, client
+        logger.debug("Request for s3://{}/{} took {} seconds",
+                summary.getBucketName(), summary.getKey(), (System.currentTimeMillis() - requestStart) / 1000.0
         );
         // TODO need a smarter solution here, an input stream that provides the file using multiple requests
         return objectPortion.getObjectContent();

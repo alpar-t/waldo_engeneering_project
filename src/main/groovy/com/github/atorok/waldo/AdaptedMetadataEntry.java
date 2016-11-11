@@ -1,6 +1,7 @@
 package com.github.atorok.waldo;
 
 import com.drew.metadata.Tag;
+import com.github.atorok.waldo.api.PictureMetadataEntry;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 

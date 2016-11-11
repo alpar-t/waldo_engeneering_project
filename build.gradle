@@ -1,5 +1,8 @@
 apply plugin: 'groovy'
 apply plugin: 'idea'
+apply plugin: 'application'
+
+mainClassName = "com.github.atorok.waldo.Main"
 
 repositories {
     jcenter()
@@ -12,8 +15,9 @@ dependencies {
     compile 'com.drewnoakes:metadata-extractor:2.9.1'
     compile 'org.apache.commons:commons-lang3:3.5'
     compile 'org.codehaus.gpars:gpars:1.2.1'
+    compile 'io.searchbox:jest:2.0.0'
+    compile 'org.slf4j:slf4j-simple:1.7.21'
 
-    testCompile 'org.slf4j:slf4j-simple:1.7.21'
     testCompile 'org.spockframework:spock-core:1.0-groovy-2.4'
     testCompile 'junit:junit:4.12'
     testCompile 'org.mockito:mockito-core:2.2.15'

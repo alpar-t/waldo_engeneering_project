@@ -3,6 +3,7 @@ package com.github.atorok.waldo;
 import com.drew.imaging.ImageProcessingException;
 import com.drew.imaging.jpeg.JpegMetadataReader;
 import com.drew.metadata.Metadata;
+import com.github.atorok.waldo.api.PictureMetadataEntry;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

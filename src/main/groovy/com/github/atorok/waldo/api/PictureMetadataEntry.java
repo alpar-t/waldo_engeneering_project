@@ -1,4 +1,4 @@
-package com.github.atorok.waldo;
+package com.github.atorok.waldo.api;
 
 public interface PictureMetadataEntry {
 

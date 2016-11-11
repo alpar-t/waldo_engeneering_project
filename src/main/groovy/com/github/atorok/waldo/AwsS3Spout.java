@@ -6,6 +6,9 @@ import com.amazonaws.services.s3.model.ListObjectsV2Request;
 import com.amazonaws.services.s3.model.ListObjectsV2Result;
 import com.amazonaws.services.s3.model.S3ObjectSummary;
 import com.amazonaws.services.s3.model.StorageClass;
+import com.github.atorok.waldo.api.PictureDrop;
+import com.github.atorok.waldo.api.PictureSpout;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -50,11 +53,11 @@ public class AwsS3Spout implements PictureSpout {
     public PictureDrop next() {
         fetchResult();
         S3ObjectSummary next = innerIterator.next();
-        if (! next.getStorageClass().equals(StorageClass.Standard.toString())) {
+        if (! StorageClass.Standard.toString().equals(next.getStorageClass())) {
             logger.warn("Object in bucket {} is not in storage class {}: {}", bucketName, StorageClass.Standard, next);
         }
         // TODO: should we trust the keys/extensions and attempt to filter out images ?
-        if (! next.getKey().toLowerCase().endsWith(JPEG)) {
+        if (!StringUtils.endsWithIgnoreCase(next.getKey(), JPEG)) {
             logger.info("Bucket {} has a key without the {} extension (will return it regardless): {} ", bucketName, JPEG, next);
         }
         return new AwsS3BackedDrop(next, client);
