@@ -15,6 +15,6 @@ public interface PictureDrop {
      */
     InputStream getMetadata();
 
-    byte[] getOverallChecksum();
+    String getOverallChecksum();
 
 }

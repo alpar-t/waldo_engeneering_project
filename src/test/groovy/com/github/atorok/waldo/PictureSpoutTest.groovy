@@ -1,19 +1,19 @@
-import com.github.atorok.waldo.PictureDrop
-import com.github.atorok.waldo.PictureSpout
+package com.github.atorok.waldo
+
 import spock.lang.Specification
 
 class PictureSpoutTest extends Specification {
 
     static class TestDrop implements PictureDrop {
         InputStream metadata;
-        byte[] overallChecksum;
+        String overallChecksum;
     }
 
     static class TestSpout implements PictureSpout {
 
         private current = 0;
         private all = ['a', 'b', 'c'].collect({
-            new TestDrop(metadata: new ByteArrayInputStream("$it".bytes), overallChecksum: "check_$it".bytes)
+            new TestDrop(metadata: new ByteArrayInputStream("$it".bytes), overallChecksum: "check_$it")
         });
 
         @Override
