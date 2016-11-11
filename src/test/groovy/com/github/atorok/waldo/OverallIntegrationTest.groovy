@@ -24,9 +24,14 @@ class OverallIntegrationTest {
         spout.each {
             try {
                 try {
-                    (new MetadataReaderAdapter(it.getMetadata())).stream().forEach({ metadata ->
-                        logger.info("dound metadata: {}", metadata)
-                    })
+                    def inputStream = it.getMetadata()
+                    try {
+                        (new MetadataReaderAdapter(inputStream)).stream().forEach({ metadata ->
+                            logger.info("found metadata: {}", metadata)
+                        })
+                    } finally {
+                        inputStream.close();
+                    }
                 } catch (AmazonS3Exception e) {
                     if (e.getStatusCode() == 403) {
                         logger.info("Ignoring access denied to {}", it, e)

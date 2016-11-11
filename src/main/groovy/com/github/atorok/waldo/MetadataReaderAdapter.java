@@ -1,7 +1,7 @@
 package com.github.atorok.waldo;
 
-import com.drew.imaging.ImageMetadataReader;
 import com.drew.imaging.ImageProcessingException;
+import com.drew.imaging.jpeg.JpegMetadataReader;
 import com.drew.metadata.Metadata;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,7 +29,9 @@ public class MetadataReaderAdapter {
     public Stream<PictureMetadataEntry> stream() throws IOException {
         Metadata metadata = null;
         try {
-            metadata = ImageMetadataReader.readMetadata(this.in);
+            // could look at magic numbers here to skip files that are not jpg
+            // could also parse metadata for all, but that's  less efficient as it requires more of the file to be present
+            metadata = JpegMetadataReader.readMetadata(this.in);
         } catch (ImageProcessingException e) {
             return Stream.of(new AdaptedMetadataEntry(e));
         } catch (EOFException e) {

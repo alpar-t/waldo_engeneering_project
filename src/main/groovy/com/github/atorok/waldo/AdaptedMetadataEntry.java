@@ -27,6 +27,9 @@ public class AdaptedMetadataEntry implements PictureMetadataEntry {
     public AdaptedMetadataEntry(Throwable e) {
         directory = "EXCEPTION";
         Throwable cause = ExceptionUtils.getRootCause(e);
+        if (cause == null) {
+            cause = e;
+        }
         name = format("%s:%s", cause.getClass().getName(), cause.getMessage());
         value = ExceptionUtils.getStackTrace(e);
     }
