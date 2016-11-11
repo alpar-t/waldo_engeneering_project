@@ -5,6 +5,7 @@ import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.ListObjectsV2Request;
 import com.amazonaws.services.s3.model.ListObjectsV2Result;
 import com.amazonaws.services.s3.model.S3ObjectSummary;
+import com.amazonaws.services.s3.model.StorageClass;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -12,9 +13,10 @@ import java.util.Iterator;
 
 public class AwsS3Spout implements PictureSpout {
 
+    public static final String JPEG = ".jpg";
     private final Logger logger = LoggerFactory.getLogger(AwsS3Spout.class);
 
-    public static final int DEFAULT_MAX_KEYS_IN_REQUEST = 50;
+    public static final int DEFAULT_MAX_KEYS_IN_REQUEST = 130;
     private final AmazonS3 client;
     private final String bucketName;
     private final int maxKeysToList;
@@ -47,7 +49,15 @@ public class AwsS3Spout implements PictureSpout {
     @Override
     public PictureDrop next() {
         fetchResult();
-        return new AwsS3BackedDrop(innerIterator.next(), client);
+        S3ObjectSummary next = innerIterator.next();
+        if (! next.getStorageClass().equals(StorageClass.Standard.toString())) {
+            logger.warn("Object in bucket {} is not in storage class {}: {}", bucketName, StorageClass.Standard, next);
+        }
+        // TODO: should we trust the keys/extensions and attempt to filter out images ?
+        if (! next.getKey().toLowerCase().endsWith(JPEG)) {
+            logger.info("Bucket {} has a key without the {} extension (will return it regardless): {} ", bucketName, JPEG, next);
+        }
+        return new AwsS3BackedDrop(next, client);
     }
 
     private void fetchResult() {

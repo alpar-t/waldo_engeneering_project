@@ -12,7 +12,7 @@ class AwsS3SpoutIntegrationTest {
     void testListing() {
         def spout = new AwsS3Spout()
         spout.each {
-            logger.info("got: {}", it.overallChecksum)
+            logger.info("Drop with checksum: {}", it.overallChecksum)
         }
     }
 
