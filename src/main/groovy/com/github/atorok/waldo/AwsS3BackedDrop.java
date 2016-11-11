@@ -1,14 +1,19 @@
 package com.github.atorok.waldo;
 
 import com.amazonaws.services.s3.AmazonS3;
+import com.amazonaws.services.s3.model.GetObjectRequest;
+import com.amazonaws.services.s3.model.S3Object;
 import com.amazonaws.services.s3.model.S3ObjectSummary;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.InputStream;
 
-/**
- *
- */
 public class AwsS3BackedDrop implements PictureDrop {
+    private final Logger logger = LoggerFactory.getLogger(AwsS3BackedDrop.class);
+
+    // TODO: selected by binary search on small sample data, bound to fail
+    public static final int METADATA_HEADER_SIZE = 1024 * 100;
     private final S3ObjectSummary summary;
     private final AmazonS3 client;
 
@@ -23,7 +28,11 @@ public class AwsS3BackedDrop implements PictureDrop {
 
     @Override
     public InputStream getMetadata() {
-        return null;
+        logger.info("Requesting the first {} bytes of: {}", METADATA_HEADER_SIZE, summary);
+        GetObjectRequest rangeObjectRequest = new GetObjectRequest(summary.getBucketName(), summary.getKey());
+        rangeObjectRequest.setRange(0, METADATA_HEADER_SIZE);
+        S3Object objectPortion = client.getObject(rangeObjectRequest);
+        return objectPortion.getObjectContent();
     }
 
     @Override
