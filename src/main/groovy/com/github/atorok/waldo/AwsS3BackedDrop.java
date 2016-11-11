@@ -13,7 +13,7 @@ public class AwsS3BackedDrop implements PictureDrop {
     private final Logger logger = LoggerFactory.getLogger(AwsS3BackedDrop.class);
 
     // TODO: selected by binary search on small sample data, bound to fail
-    public static final int METADATA_HEADER_SIZE = 1024 * 400;
+    public static final int METADATA_HEADER_SIZE = 1024 * 85;
     private final S3ObjectSummary summary;
     private final AmazonS3 client;
 
@@ -32,9 +32,14 @@ public class AwsS3BackedDrop implements PictureDrop {
                 "Requesting the first {} ({} bytes not downloaded) bytes of: {}",
                 METADATA_HEADER_SIZE, summary.getSize() - METADATA_HEADER_SIZE, summary
         );
+        long requestStart = System.currentTimeMillis();
         GetObjectRequest rangeObjectRequest = new GetObjectRequest(summary.getBucketName(), summary.getKey());
         rangeObjectRequest.setRange(0, METADATA_HEADER_SIZE);
+
         S3Object objectPortion = client.getObject(rangeObjectRequest);
+        logger.info("Request for s3://{}/{} took {} seconds {}",
+                summary.getBucketName(), summary.getKey(), (System.currentTimeMillis() - requestStart) / 1000.0, client
+        );
         // TODO need a smarter solution here, an input stream that provides the file using multiple requests
         return objectPortion.getObjectContent();
     }

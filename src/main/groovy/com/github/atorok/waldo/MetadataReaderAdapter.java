@@ -27,7 +27,7 @@ public class MetadataReaderAdapter {
     }
 
     public Stream<PictureMetadataEntry> stream() throws IOException {
-        Metadata metadata = null;
+        Metadata metadata;
         try {
             // could look at magic numbers here to skip files that are not jpg
             // could also parse metadata for all, but that's  less efficient as it requires more of the file to be present
@@ -38,7 +38,6 @@ public class MetadataReaderAdapter {
             logger.warn("Encountered EOF: we might not have enough of the file header");
             throw e;
         }
-
         return StreamSupport.stream(metadata.getDirectories().spliterator(), false)
                 .flatMap( directory ->
                         Stream.concat(
