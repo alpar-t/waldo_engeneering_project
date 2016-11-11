@@ -4,6 +4,20 @@ About
 One possible solution to the 
 [Waldo Photos Engineering Project](https://gist.github.com/alwaysunday/db0b32f5ce0538afbb75ccf143adf116).
 
+Uses Java, Groovy and Elastic Search.
+
+How to run ?
+------------
+
+Make sure you have docker and Java 8 installed.
+Docker is used to bring up and ELK stack (https://elk-docker.readthedocs.io/) locally.
+    
+    sudo sysctl -w vm.max_map_count=262144
+    sudo docker run -p 5601:5601 -p 9200:9200 -p 5044:5044 -p 9300:9300 -it --name elk sebp/elk
+    ./gradlew run 
+
+Results will be visible on the Kibana dashboard: (http://localhost:5601/).
+
 Overall approach
 ================
 
@@ -26,16 +40,6 @@ Overall approach
     - single processing errors should not bring the system down 
 - make the project easy to run, us gradle and docker to bring all needed components up
 
-Running
-=======
-
-Quick instructions to bring up the ELK stack (https://elk-docker.readthedocs.io/)
-    
-    sudo sysctl -w vm.max_map_count=262144
-    sudo docker run -p 5601:5601 -p 9200:9200 -p 5044:5044 -p 9300:9300 -it --name elk sebp/elk
-    ./gradlew run 
-
-Results will be visible on the Kibana dashboard: (http://localhost:5601/).
 
 Implementation Notes/Limitations
 ================================
