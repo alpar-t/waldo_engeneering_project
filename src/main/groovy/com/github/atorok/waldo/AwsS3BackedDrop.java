@@ -41,7 +41,7 @@ public class AwsS3BackedDrop implements PictureDrop {
         logger.debug("Request for s3://{}/{} took {} seconds",
                 summary.getBucketName(), summary.getKey(), (System.currentTimeMillis() - requestStart) / 1000.0
         );
-        // TODO need a smarter solution here, an input stream that provides the file using multiple requests
+        // TODO need a smarter solution here, perhaps an input stream that provides the file using multiple requests if needed
         return objectPortion.getObjectContent();
     }
 

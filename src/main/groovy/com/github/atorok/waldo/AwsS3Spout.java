@@ -1,7 +1,6 @@
 package com.github.atorok.waldo;
 
 import com.amazonaws.services.s3.AmazonS3;
-import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.ListObjectsV2Request;
 import com.amazonaws.services.s3.model.ListObjectsV2Result;
 import com.amazonaws.services.s3.model.S3ObjectSummary;
@@ -35,10 +34,6 @@ public class AwsS3Spout implements PictureSpout {
         this.currentRequest = new ListObjectsV2Request().withBucketName(this.bucketName).withMaxKeys(this.maxKeysToList);
     }
 
-    public AwsS3Spout() {
-        this(new AmazonS3Client());
-    }
-
     public AwsS3Spout(AmazonS3 client) {
         this(client, "waldo-recruiting", DEFAULT_MAX_KEYS_IN_REQUEST);
     }
@@ -65,7 +60,7 @@ public class AwsS3Spout implements PictureSpout {
 
     private void fetchResult() {
         if (innerIterator != null && innerIterator.hasNext()) {
-            // no need to fetch yet
+            // current iterator still has entries, no need to fetch yet
             return;
         }
         if (currentResult != null) {
@@ -73,7 +68,7 @@ public class AwsS3Spout implements PictureSpout {
                 logger.debug("Configuring continuation token on list request on {}", bucketName);
                 currentRequest.setContinuationToken(currentResult.getNextContinuationToken());
             } else {
-                // we are past the first request, which was not truncated, no need to fire an additional one
+                // we are past the first request, which was not truncated, there are no more results
                 return;
             }
         }
